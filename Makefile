@@ -1,12 +1,9 @@
-up:
-	if docker network ls | grep -q spothood-network
-		then
-			echo "network exists";
-		else
-			docker network create spothood-network;
-	fi
+network:
+	docker network create spothood-network;
 
+up:
 	docker-compose up -d
+	docker-compose up
 
 stop:
 	docker-compose stop
