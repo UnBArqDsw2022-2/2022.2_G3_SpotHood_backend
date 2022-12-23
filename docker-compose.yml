@@ -1,0 +1,37 @@
+version: '3.5'
+services:
+    spothood-db:
+        container_name: spothood-db
+        restart: always
+        image: postgres:9.6
+        ports:
+            - 5431:5432
+        env_file: dev-env
+        networks:
+            - spothood-network
+        volumes:
+            - spothood-pg-data:/var/lib/postgresql/data
+
+    spothood-api:
+        container_name: spothood-api
+        restart: always
+        build: .
+        env_file: dev-env
+        command: ["sh", "scripts/start.sh"]
+        ports:
+            - 8001:8001
+        networks:
+          - spothood-network
+        volumes:
+            - .:/spothood-network
+            - pip_cache:/usr/local/lib/python3.10/site-packages
+        depends_on:
+            - spothood-db
+
+volumes:
+    spothood-pg-data: {}
+    pip_cache:
+
+networks:
+  spothood-network:
+    external: true
